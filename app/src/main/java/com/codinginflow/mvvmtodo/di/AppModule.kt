@@ -1,6 +1,9 @@
 package com.codinginflow.mvvmtodo.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.codinginflow.mvvmtodo.data.TaskDao
 import com.codinginflow.mvvmtodo.data.TaskDatabase
@@ -13,6 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
 import javax.inject.Singleton
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -37,6 +42,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideApplicationScope() = CoroutineScope(SupervisorJob())
+
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        context.dataStore
 }
 
 @Retention(AnnotationRetention.RUNTIME)
