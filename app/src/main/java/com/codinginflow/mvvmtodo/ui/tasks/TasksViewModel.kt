@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class TasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
@@ -80,6 +81,10 @@ class TasksViewModel @Inject constructor(
         }
     }
 
+    fun onDeleteAllCompletedClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompletedScreen)
+    }
+
     private fun showTaskSavedConfirmationMessage(text: String) = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMessage(text))
     }
@@ -90,5 +95,6 @@ class TasksViewModel @Inject constructor(
         data class NavigateToEditTaskScreen(val task: Task): TasksEvent()
         data class ShowUndoDeleteTaskMessage(val task: Task) : TasksEvent()
         data class ShowTaskSavedConfirmationMessage(val message: String): TasksEvent()
+        object NavigateToDeleteAllCompletedScreen : TasksEvent()
     }
 }
